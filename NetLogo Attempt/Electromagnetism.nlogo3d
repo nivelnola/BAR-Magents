@@ -6,31 +6,36 @@ breed [endpoints endpoint]
 ;; Variables:
 ;;
 directed-link-breed [wiresegs wireseg]
-wiresegs-own [current]
 
 to setup
   clear-all
-  set-default-shape endpoints "circle"
-  set-default-shape wiresegs "current_segment"
-  create-endpoints 2
-  ask endpoint 0 [setxyz 0 0 0]
-  ask endpoint 1 [
-    setxyz 6 6 6
-    create-wireseg-to endpoint 0
-  ]
-
-  normalize-display
 end
 
 to normalize-display
   ask endpoints [
     set size .25
     set color grey
+    set shape "circle"
   ]
   ask wiresegs [
     set thickness .5
     set color blue
+    set shape "wire_off"
   ]
+end
+
+to sendCurrent [I]
+  ask wiresegs [
+    set shape "wire_on"
+    set current I
+  ]
+end
+
+to simulate
+  while [Power] [
+
+  ]
+  ask wiresegs [set shape "wire_off"]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -68,7 +73,7 @@ INPUTBOX
 104
 119
 X
-7.0
+10.0
 1
 0
 Number
@@ -79,7 +84,7 @@ INPUTBOX
 154
 119
 Y
-7.0
+0.0
 1
 0
 Number
@@ -90,7 +95,7 @@ INPUTBOX
 204
 119
 Z
-7.0
+0.0
 1
 0
 Number
@@ -101,7 +106,7 @@ BUTTON
 204
 152
 Generate Endpoint
-create-endpoints 1 [\nsetxyz X Y Z\nif (count endpoints != 1) [\ncreate-wireseg-from endpoint ((count endpoints) - 2)\n]\n]\nnormalize-display
+if not Power [\ncreate-endpoints 1 [\nsetxyz X Y Z\nif (count endpoints != 1) [\ncreate-wireseg-from endpoint ((count endpoints) - 2)\n]\n]\n]\nnormalize-display
 NIL
 1
 T
@@ -111,6 +116,79 @@ NIL
 NIL
 NIL
 1
+
+BUTTON
+54
+151
+204
+184
+Close Loop
+ask endpoint 0 [\ncreate-wireseg-from endpoint ((count endpoints) - 1)\n]\n\nnormalize-display
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+BUTTON
+232
+60
+335
+93
+Clear Display
+setup
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+SWITCH
+232
+93
+335
+126
+Power
+Power
+1
+1
+-1000
+
+BUTTON
+232
+126
+335
+159
+Calculate
+NIL
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
+
+INPUTBOX
+232
+158
+335
+218
+Current
+0.0
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -472,15 +550,25 @@ true
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
 
-current_segment
+wire_off
 0.0
 -0.2 0 0.0 1.0
 0.0 1 1.0 0.0
 0.2 0 0.0 1.0
 link direction
-false
+true
 0
 Polygon -7500403 true true 150 135 135 195 150 180 165 195 150 135 150 135
+
+wire_on
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+true
+0
+Polygon -1184463 true false 150 135 135 195 150 180 165 195 150 135 150 135
 @#$#@#$#@
 0
 @#$#@#$#@
