@@ -1,4 +1,37 @@
+; Endpoints definition
+;; Variables:
+;;
+breed [endpoints endpoint]
+; Wire segment definition
+;; Variables:
+;;
+directed-link-breed [wiresegs wireseg]
+wiresegs-own [current]
 
+to setup
+  clear-all
+  set-default-shape endpoints "circle"
+  set-default-shape wiresegs "current_segment"
+  create-endpoints 2
+  ask endpoint 0 [setxyz 0 0 0]
+  ask endpoint 1 [
+    setxyz 6 6 6
+    create-wireseg-to endpoint 0
+  ]
+
+  normalize-display
+end
+
+to normalize-display
+  ask endpoints [
+    set size .25
+    set color grey
+  ]
+  ask wiresegs [
+    set thickness .5
+    set color blue
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 0
@@ -28,6 +61,56 @@ GRAPHICS-WINDOW
 1
 ticks
 30.0
+
+INPUTBOX
+54
+59
+104
+119
+X
+7.0
+1
+0
+Number
+
+INPUTBOX
+104
+59
+154
+119
+Y
+7.0
+1
+0
+Number
+
+INPUTBOX
+154
+59
+204
+119
+Z
+7.0
+1
+0
+Number
+
+BUTTON
+54
+119
+204
+152
+Generate Endpoint
+create-endpoints 1 [\nsetxyz X Y Z\nif (count endpoints != 1) [\ncreate-wireseg-from endpoint ((count endpoints) - 2)\n]\n]\nnormalize-display
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -388,6 +471,16 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
+
+current_segment
+0.0
+-0.2 0 0.0 1.0
+0.0 1 1.0 0.0
+0.2 0 0.0 1.0
+link direction
+false
+0
+Polygon -7500403 true true 150 135 135 195 150 180 165 195 150 135 150 135
 @#$#@#$#@
 0
 @#$#@#$#@
